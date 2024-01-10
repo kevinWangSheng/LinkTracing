@@ -1,19 +1,15 @@
 package com.kevin.config;
 
 import com.kevin.common.Constance;
-import com.kevin.util.TraceIdUtil;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.ContainerCustomizer;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.amqp.RabbitTemplateConfigurer;
 import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,6 +28,7 @@ public class RabbitConfig {
         return template;
     }
 
+    // 暂时不用这种方式
 //    @Bean(name = {"rabbitListenerContainerFactory"})
 //    @ConditionalOnProperty(
 //            prefix = "spring.rabbitmq.listener",
@@ -48,21 +45,6 @@ public class RabbitConfig {
         factory.setAfterReceivePostProcessors(new RabbitTraceMessageAfterRec());
         return factory;
     }
-
-    @Bean
-    public MessageListenerContainer container(ConnectionFactory connectionFactory,
-                                              TraceIdAwareListenerAdapter traceIdAwareListenerAdapter){
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.setMessageListener(traceIdAwareListenerAdapter);
-        return container;
-    }
-
-    @Bean
-    public TraceIdAwareListenerAdapter traceIdAwareListenerAdapter(){
-        return new TraceIdAwareListenerAdapter();
-    }
-
 
     @Bean
     public Queue Queue() {

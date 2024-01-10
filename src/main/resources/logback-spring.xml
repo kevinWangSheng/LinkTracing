@@ -1,0 +1,29 @@
+<!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
+<configuration scan="true" scanPeriod="10 seconds">
+    <!--设置重要-->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%highlight(%date{yyyy-MM-dd HH:mm:ss}) | %highlight(%-5level) | %highlight(%thread) | %highlight(%logger) [traceId:%X{traceId}] | %msg%n"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder charset="UTF-8">
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 定义错误日志的文件输出器 -->
+    <appender name="FILE-ERROR" class="ch.qos.logback.core.FileAppender">
+        <file>error.log</file> <!-- 错误日志文件的名称和位置 -->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %X{traceId}%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

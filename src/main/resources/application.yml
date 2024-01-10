@@ -1,0 +1,10 @@
+server:
+  port: 8808
+logging:
+  config: classpath:logback-spring.xml
+spring:
+  rabbitmq:
+    addresses: 124.221.25.145
+    port: 5672
+    username: guest
+    password: guest
